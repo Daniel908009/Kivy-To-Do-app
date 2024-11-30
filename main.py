@@ -42,35 +42,14 @@ class FileManagement:
     # method for ordering the tasks by date from the most urgent to the least urgent
     def order_tasks(self):
         self.load_tasks()
-        # creating a temporary list to store the tasks with no date
-        #no_date_tasks = []
-        #for task in self.tasks:
-        #    if task['date'] == 'No date':
-        #        no_date_tasks.append(task)
-        # now removing the tasks with no date from the tasks list, this cannot be done in the for loop above, because it will skip some tasks
-        #for task in no_date_tasks:
-        #    self.tasks.remove(task)
-        # ordering the tasks list by date, for now only by day, month and year, hours and minutes will be added later
-        #self.tasks = sorted(self.tasks, key=lambda x: datetime.datetime.strptime(x['date'], '%d %m %Y'))
-        # adding the tasks with no date to the end of the list
-        #for task in no_date_tasks:
-        #    self.tasks.append(task)
         # saving the tasks
         self.save_tasks()
     
     # method to add a task to the tasks list
-    def add_task(self, task):
+    def add_task_widget(self, task):
         self.tasks.append(task)
         self.save_tasks()
         self.order_tasks()
-        # ordering the tasks every time a new task is added
-        #self.order_tasks()
-        #print("tasks ordered")
-        # re-adding the tasks to the scroll view
-        # this has to be done here, so the widgets will become ordered the same way as the now ordered tasks
-        #MainGrid().ids.task_list.clear_widgets()
-        #for task in self.create_task_widgets():
-        #    MainGrid().ids.task_list.add_widget(task)
 
     # method to delete a task from the tasks list
     def delete_task(self, task):
@@ -85,15 +64,16 @@ class FileManagement:
         task_widgets = []
         for task in self.tasks:
             task_widgets.append(TaskWidget(task))
-            #print("task widget created")
         return task_widgets
+
+fileManager = FileManagement()
 
 # class for the task widget
 class TaskWidget(GridLayout):
     def __init__(self, task):
         super().__init__()
         self.cols = 4
-        self.file_m= FileManagement()
+        self.file_m = fileManager
         self.add_widget(Label(text=task['task name']))
         self.add_widget(Label(text=task['date']))
         if task['status'] == 'unfinished':
@@ -113,18 +93,11 @@ class TaskWidget(GridLayout):
     # method to delete a task
     def delete(self, task, popup):
         popup.dismiss()
-        #print(len(self.file_m.tasks))
+        self.parent.parent.parent.parent.update_scroll_view_height() # will have to be changed, because this looks ridiculous parent of parent of parent.......
         # removing the task from the file
-        #print(self.file_m.tasks)
         self.file_m.delete_task(task)
-        #print(self.file_m.tasks)
         # removing the widget from the grid layout
         self.parent.remove_widget(self)
-        # resizing the scroll view
-        MainGrid().ids.task_list.size_hint_y = None
-        MainGrid().ids.task_list.height = len(self.file_m.tasks) * 75
-        #print(len(self.file_m.tasks))
-        #print("task deleted")
 
     # method to open a popup with the tasks complete and detailed information
     def open_popup(self, task):
@@ -162,8 +135,12 @@ class MainGrid(GridLayout):
     # method to get the current date and time
     def get_current_date_time(self):
         current_date_time = datetime.datetime.now()
-        #print("The current date and time is: " + str(current_date_time))
         return current_date_time
+
+    # method to update the scroll view height
+    def update_scroll_view_height(self):
+        self.ids.task_list.size_hint_y = None
+        self.ids.task_list.height = len(self.file_management.tasks) * 75
     
     # method to open a popup to add a task
     def add_task_popup(self):
@@ -211,7 +188,6 @@ class MainGrid(GridLayout):
         else:
             month_values = [str(i) for i in range(1, 13)]
         self.month.values = month_values
-        #print("new month values: " + str(month_values))
 
     # method that updates the day values based on the selected month
     # if the month is the current month, the day values will be from the current day to the last day of the month
@@ -221,7 +197,6 @@ class MainGrid(GridLayout):
         else:
             day_values = [str(i) for i in range(1, 32)]
         self.day.values = day_values
-        #print("new day values: " + str(day_values))
 
     # method to add a task to the tasks list
     def add_task(self, popup_content, popup):
@@ -232,15 +207,12 @@ class MainGrid(GridLayout):
             task_name = popup_content.children[3].children[0].text
         else:
             task_name = 'No name'
-        #print(task_name)
         task_description = ""
         if popup_content.children[2].children[0].text != '':
             task_description = popup_content.children[2].children[0].text
         else:
             task_description = 'No description'
-        #print(task_description)
         task_date = ""
-        #print(popup_content.children[1].children[0].text)
         if popup_content.children[1].children[0].text == 'day' and popup_content.children[1].children[1].text == 'month' and popup_content.children[1].children[2].text == 'year':
             task_date = 'No date'
         else:
@@ -256,25 +228,27 @@ class MainGrid(GridLayout):
                 task_date += popup_content.children[1].children[2].text + ''
             else:
                 task_date += str(self.get_current_date_time().year) + ''
-        #print(task_date)
         creation_date = self.get_current_date_time().strftime('%d %m %Y')
         task = {'task name': task_name, 'description': task_description, 'date': task_date,'created_on': creation_date ,'status': 'unfinished'}
-        #print(str(task) + ' added to the tasks')
         # adding the task to the file
-        self.file_management.add_task(task)
+        self.file_management.add_task_widget(task)
+        # adding the task to the scroll view
+        self.ids.task_list.add_widget(TaskWidget(task))
+        # resizing the scroll view
+        self.ids.task_list.size_hint_y = None
+        self.ids.task_list.height += 75
 
     # method to load the tasks from the file and add them to the scroll view
     def set_up(self):
-        self.file_management = FileManagement()
+        self.file_management = fileManager
         self.file_management.create_file()
         self.file_management.load_tasks()
-        #self.file_management.order_tasks()
+        self.file_management.order_tasks()
         # adding the tasks to the scroll view
         for task in self.file_management.create_task_widgets():
             self.ids.task_list.add_widget(task)
         # modifying the scroll view to be as big as all the tasks inside combined
-        #self.ids.task_list.size_hint_y = None
-        #self.ids.task_list.height = len(self.file_management.tasks) * 75
+        self.update_scroll_view_height()
 
     # method to change the light mode
     def change_mode(self):
