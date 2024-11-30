@@ -1,0 +1,26 @@
+<MainGrid>:
+    cols: 1
+    on_kv_post: root.set_up()
+    GridLayout:
+        cols: 1
+        size_hint: (1, 0.9)
+        Label:
+            text: 'Task List'
+            size_hint: (0.2, 0.2)
+        ScrollView:
+            size_hint: (1, 1)
+            GridLayout:
+                id: task_list
+                cols: 1
+                size_hint: (1, None)
+                
+    
+    GridLayout:
+        cols: 2
+        size_hint: (1, 0.1)
+        Button:
+            text: 'Delete Task'
+            on_press: root.delete_task()
+        Button:
+            text: 'Add Task'
+            on_press: root.add_task_popup()
