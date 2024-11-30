@@ -5,6 +5,9 @@
 <p>I am currently learning Kivy through these small apps, so pardon me if the code doesnt look the best.</p>
 
 ## Screenshots
+![image](https://github.com/user-attachments/assets/9db2ace6-7d98-43d2-a0fb-efcd9aa9a192)
+![image](https://github.com/user-attachments/assets/589104b6-91a3-4ac7-8a3d-968189d9aac6)
+![image](https://github.com/user-attachments/assets/dcd82d73-46be-4b3d-b49d-b04ee9faaa8f)
 
 <h1>Download instructions</h1>
 *Note the links are instructional images <br>
@@ -21,11 +24,11 @@ Enjoy! <br>
 <h2>Using command prompt</h2>
 <h3>Downloading source code </h3>
 Open your command prompt and enter the folowing code without the " letters <br>
-"" <br>
+"https://github.com/Daniel908009/Kivy-To-Do-app.git" <br>
 This code adress of the site can also be found if you click the code button inside the github repository UI <br>
 If you dont have git than first enter the folowing command: sudo apt install git <br>
 Now open a console and enter the folowing code: pip install -r /path/to/requirements.txt <br>
 *Replace the /path/to/requirements.txt with the actual path. <br>
 Enjoy! <br>
 <h2>Using Pypi</h2>
-simply open your command prompt and enter this command: pip install <br>
+simply open your command prompt and enter this command: pip install Kivy_To_Do_app_package<br>
