@@ -4,6 +4,7 @@
 <p>All the basic features like adding or deleting tasks, or adding dates to the tasks are in, however it is not complete yet, features like ordering tasks based on the importance are not done yet.</p>
 <p>I am currently learning Kivy through these small apps, so pardon me if the code doesnt look the best.</p>
 <p>Next update I will move a lot of stuff to the .kv file and I will add hours and minutes to the date system.</p>
+
 ## Screenshots
 ![image](https://github.com/user-attachments/assets/9db2ace6-7d98-43d2-a0fb-efcd9aa9a192)
 ![image](https://github.com/user-attachments/assets/589104b6-91a3-4ac7-8a3d-968189d9aac6)
