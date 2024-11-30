@@ -7,20 +7,20 @@
         Label:
             text: 'Task List'
             size_hint: (0.2, 0.2)
+            font_size: 30
         ScrollView:
             size_hint: (1, 1)
             GridLayout:
                 id: task_list
                 cols: 1
                 size_hint: (1, None)
-                
     
     GridLayout:
         cols: 2
         size_hint: (1, 0.1)
         Button:
-            text: 'Delete Task'
-            on_press: root.delete_task()
+            text: 'Change mode'
+            on_press: root.change_mode()
         Button:
             text: 'Add Task'
             on_press: root.add_task_popup()
